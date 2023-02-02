@@ -3,7 +3,7 @@
 <section class="section_kv">
 	<div id="particles-js"></div>
 	<div class="kv_div">
-		<img class="" src="/img/common/kv_top_logo.png" alt="" />
+		<img src="/img/common/kv_top_logo.png" alt="" />
 		<p>
 		<a href="/item/index.php">1F</a><a href="/item/index_s.php">2F</a><a href="/course/index.php">3F</a><a href="/seminar/index.php">4F</a><a href="/guide/"><span class="material-symbols-outlined md-light">map</span></a></p>
 	</div>
