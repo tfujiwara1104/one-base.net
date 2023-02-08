@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx webpack serve --mode=development",
+    "build": "webpack --mode production",
+    "build:dev": "webpack"
   },
   "repository": {
     "type": "git",
@@ -18,12 +20,19 @@
   },
   "homepage": "https://github.com/tfujiwara1104/one-base.net#readme",
   "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^9.1.2",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.3",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "image-webpack-loader": "^8.1.0",
     "mini-css-extract-plugin": "^2.7.2",
     "pug-html-loader": "^1.1.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "sass": "^1.58.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
