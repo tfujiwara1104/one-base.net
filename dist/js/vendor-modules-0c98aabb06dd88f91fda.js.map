@@ -1,0 +1,1 @@
+{"version":3,"file":"js/vendor-modules-0c98aabb06dd88f91fda.js","mappings":";;;;;;;;;;;;;AAAO,SAASA,KAAK,CAACC,IAAI,EAAE;EAC1B,uBAAgBA,IAAI;AACtB","sources":["webpack://one-base.net/./src/js/modules/greet.js"],"sourcesContent":["export function greet(name) {\n  return `Hello,${name}!!`;\n}\n"],"names":["greet","name"],"sourceRoot":""}

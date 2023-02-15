@@ -4,15 +4,34 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: 'development', //development or production
   devtool: 'source-map',
   entry: {
-    main: './src/javascripts/main.js',
+    main: './src/js/main.js',
+    sub: './src/js/sub.js',
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: 'javascripts/[name]-[contenthash].js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'js/[name]-[contenthash].js',
     publicPath: '/',
+    chunkFilename: 'js/[name]-[contenthash].js',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'initial',
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: 'vendor',
+        },
+        vendorsModules: {
+          chunks: 'initial',
+          test: /src[\\/]js[\\/]modules/,
+          name: 'vendor-modules',
+          minSize: 0,
+          minChunks: 2,
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -49,8 +68,11 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: false, //開発時true,本番false
+              sourceMap: true, //開発時true,本番false
             },
+          },
+          {
+            loader: 'postcss-loader',
           },
           {
             loader: 'sass-loader',
@@ -58,10 +80,10 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpg|jpeg)/,
+        test: /\.(png|gif|svg|jpe?g)/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name]-[contenthash][ext]',
+          filename: 'img/[name]-[contenthash][ext]',
         },
         use: [
           {
@@ -99,21 +121,29 @@ module.exports = {
     static: path.relative(__dirname, 'src'),
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: './stylesheets/[name]-[contenthash].css',
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/templates/index.pug',
-      filename: 'index.html',
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/templates/second.pug',
-      filename: 'second.html',
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/templates/members/taro.pug',
-      filename: 'members/taro.html',
-    }),
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: './css/[name]-[contenthash].css',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/tmp/index.pug',
+      filename: 'index.html',
+      chunks: ['main'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/tmp/sub.pug',
+      filename: 'sub.html',
+      chunks: ['sub'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/tmp/second.pug',
+      filename: 'second.html',
+      chunks: ['main'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/tmp/members/taro.pug',
+      filename: 'members/taro.html',
+      chunks: ['main'],
+    }),
   ],
 };
