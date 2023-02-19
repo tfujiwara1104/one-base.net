@@ -1,6 +1,5 @@
-import $ from 'jquery';
 import velocity from 'velocity-animate';
-import { greet } from './modules/greet';
+import { greet } from './utils/greet';
 
 $('body')
   .css('color', 'red')

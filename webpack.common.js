@@ -1,42 +1,53 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const { ProvidePlugin } = require('webpack');
 
-module.exports = {
-  devtool: 'source-map',
+module.exports = ({ outputFile, assetFile }) => ({
   entry: {
     main: './src/js/main.js',
     sub: './src/js/sub.js',
+    secondStyle: './src/scss/main.scss',
+    thirdStyle: './src/scss/footer.scss',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name]-[contenthash].js',
+    filename: `js/${outputFile}.js`,
     publicPath: '/',
-    chunkFilename: 'js/[name]-[contenthash].js',
+    chunkFilename: `js/${outputFile}.js`,
   },
   optimization: {
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'all',
       cacheGroups: {
         vendor: {
+          chunks: 'initial',
           test: /node_modules/,
           name: 'vendor',
         },
-        vendorsModules: {
-          chunks: 'initial',
-          test: /src[\\/]js[\\/]modules/,
-          name: 'vendor-modules',
+        utils: {
+          chunks: 'async', //async：非同期処理
+          test: /src[\\/]/,
+          name: 'utils',
           minSize: 0,
           minChunks: 2,
         },
       },
     },
   },
+  resolve: {
+    alias: {
+      '@scss': path.resolve(__dirname, 'src/scss'),
+      '@img': path.resolve(__dirname, 'src/img'),
+    },
+    extensions: ['.js', '.scss'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+  },
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: [
           {
@@ -45,7 +56,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(js|jsx)/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [
           {
@@ -60,49 +71,19 @@ module.exports = {
         ],
       },
       {
-        test: /\.(css|sass|scss)/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true, //開発時true,本番false
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      {
-        test: /\.(png|gif|svg|jpe?g)/,
+        test: /\.(png|gif|svg|jpe?g|woff2?|ttf|eot)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'img/[name]-[contenthash][ext]',
+          filename: `img/${assetFile}[ext]`,
         },
         use: [
           {
             loader: 'image-webpack-loader',
-            // options:{
-            //   mozjpeg:{
-            //     progressive:true,
-            //     quality:70
-            //   },
-            // },
-            // optipng:{
-            //   quality:[0.65,0.90],
-            //   speed:4
-            // },
           },
         ],
       },
       {
-        test: /\.pug/,
+        test: /\.pug$/,
         use: [
           {
             loader: 'html-loader',
@@ -117,33 +98,18 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    static: path.relative(__dirname, 'src'),
-  },
   plugins: [
     new CleanWebpackPlugin(),
+    new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
-      filename: './css/[name]-[contenthash].css',
+      filename: `./css/${outputFile}.css`,
     }),
-    new HtmlWebpackPlugin({
-      template: './src/tmp/index.pug',
-      filename: 'index.html',
-      chunks: ['main'],
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/tmp/sub.pug',
-      filename: 'sub.html',
-      chunks: ['sub'],
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/tmp/second.pug',
-      filename: 'second.html',
-      chunks: ['main'],
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/tmp/members/taro.pug',
-      filename: 'members/taro.html',
-      chunks: ['main'],
+    new ProvidePlugin({
+      //eslintrc.jsにも追記
+      $: 'jquery',
+      jQuery: 'jquery',
+      utils: [path.resolve(__dirname, 'src/js/utils'), 'default'],
+      velocity: 'velocity-animate',
     }),
   ],
-};
+});

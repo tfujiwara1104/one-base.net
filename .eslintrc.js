@@ -11,4 +11,10 @@ module.exports = {
   rules: {
     'prefer-const': 'error',
   },
+  globals: {
+    $: true,
+    jquery: true,
+    utils: true,
+    velocity: true,
+  },
 };

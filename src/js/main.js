@@ -1,9 +1,10 @@
-import $ from 'jquery';
-import velocity from 'velocity-animate';
-import './reactApp.jsx';
-import '../css/main.scss';
-import { add } from './modules/math';
-import { greet } from './modules/greet';
+import 'js/reactApp.jsx';
+import '@scss/main';
+import { add } from 'js/utils/math';
+import { greet } from 'js/utils/greet';
+setTimeout(() => {
+  import('js/sub');
+}, 2000);
 
 console.log('app');
 
@@ -27,4 +28,5 @@ async function delayHello() {
   console.log(value);
 }
 
+utils.log('Hello,utils!');
 delayHello();
